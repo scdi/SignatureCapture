@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #define kPadding 50
-@interface ViewController ()
+@interface ViewController () <ReaderViewControllerDelegate>
 {
     CGSize _pageSize;
 }
@@ -238,7 +238,7 @@
 
 -(void)makePDF {
     NSLog(@"Try to make the PDF");
-    [self setupPDFDocumentNamed:@"NewPDF" Width:850 Height:1100];
+    [self setupPDFDocumentNamed:@"signature" Width:850 Height:1100];
     
     [self beginPDFPage];
     
@@ -270,9 +270,9 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
-    NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:newPDFName];
-    self.url = [NSURL fileURLWithPath:pdfPath];
-    UIGraphicsBeginPDFContextToFile(pdfPath, CGRectZero, nil);
+    self.pdfPath = [documentsDirectory stringByAppendingPathComponent:newPDFName];
+    self.url = [NSURL fileURLWithPath:_pdfPath];
+    UIGraphicsBeginPDFContextToFile(_pdfPath, CGRectZero, nil);
 }
 
 - (void)beginPDFPage {
@@ -346,18 +346,84 @@
     [webView loadRequest:request];
     
     [self.view addSubview:webView];
+    [self mergePDF];
     
 }
-/*
+
+-(void) mergePDF {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    // File paths
+    NSString *pdfPath1 = [[NSBundle mainBundle] pathForResource:@"ExPainimationCRF" ofType:@"pdf"];
+//    NSString *pdfPath2 = [documentsDirectory stringByAppendingPathComponent:@"temp2.pdf"];
+    NSString *pdfPath2 = _pdfPath;
+    NSString *pdfPathOutput = [documentsDirectory stringByAppendingPathComponent:@"signedICF.pdf"];
+    self.icfPathOutput = pdfPathOutput;
+    
+    // File URLs - bridge casting for ARC
+    CFURLRef pdfURL1 = (__bridge_retained CFURLRef)[[NSURL alloc] initFileURLWithPath: (NSString *)pdfPath1];//(CFURLRef) NSURL
+    CFURLRef pdfURL2 = (__bridge_retained CFURLRef)[[NSURL alloc] initFileURLWithPath: (NSString *)pdfPath2];//(CFURLRef)
+    CFURLRef pdfURLOutput =(__bridge_retained CFURLRef) [[NSURL alloc] initFileURLWithPath:  (NSString *)pdfPathOutput];//(CFURLRef)
+    
+    // File references
+    CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef) pdfURL1);
+    CGPDFDocumentRef pdfRef2 = CGPDFDocumentCreateWithURL((CFURLRef) pdfURL2);
+    
+    // Number of pages
+    NSInteger numberOfPages1 = CGPDFDocumentGetNumberOfPages(pdfRef1);
+    NSInteger numberOfPages2 = CGPDFDocumentGetNumberOfPages(pdfRef2);
+    
+    // Create the output context
+    CGContextRef writeContext = CGPDFContextCreateWithURL(pdfURLOutput, NULL, NULL);
+    
+    // Loop variables
+    CGPDFPageRef page;
+    CGRect mediaBox;
+    
+    // Read the first PDF and generate the output pages
+    NSLog(@"GENERATING PAGES FROM PDF 1 (%li)...", (long)numberOfPages1);
+    for (int i=1; i<=numberOfPages1; i++) {
+        page = CGPDFDocumentGetPage(pdfRef1, i);
+        mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+        CGContextBeginPage(writeContext, &mediaBox);
+        CGContextDrawPDFPage(writeContext, page);
+        CGContextEndPage(writeContext);
+    }
+    
+    // Read the second PDF and generate the output pages
+    NSLog(@"GENERATING PAGES FROM PDF 2 (%li)...", (long)numberOfPages2);
+    for (int i=1; i<=numberOfPages2; i++) {
+        page = CGPDFDocumentGetPage(pdfRef2, i);
+        mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+        CGContextBeginPage(writeContext, &mediaBox);
+        CGContextDrawPDFPage(writeContext, page);
+        CGContextEndPage(writeContext);
+    }
+    NSLog(@"DONE!");
+    
+    // Finalize the output file
+    CGPDFContextClose(writeContext);
+    [self openPDF];
+    
+    // Release from memory
+    CFRelease(pdfURL1);
+    CFRelease(pdfURL2);
+    CFRelease(pdfURLOutput);
+    CGPDFDocumentRelease(pdfRef1);
+    CGPDFDocumentRelease(pdfRef2);
+    CGContextRelease(writeContext);
+}
+
 - (void)openPDF {
  
- NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
- NSString *documentsDirectory = [paths objectAtIndex:0];
- NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:@"NewPDF.pdf"];
+// NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+// NSString *documentsDirectory = [paths objectAtIndex:0];
+// NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:@"NewPDF.pdf"];
  
- if([[NSFileManager defaultManager] fileExistsAtPath:pdfPath]) {
+ if([[NSFileManager defaultManager] fileExistsAtPath:_icfPathOutput]) {
  
- ReaderDocument *document = [ReaderDocument withDocumentFilePath:pdfPath password:nil];
+ ReaderDocument *document = [ReaderDocument withDocumentFilePath:_icfPathOutput password:nil];
  
  if (document != nil)
  {
@@ -372,7 +438,7 @@
  }
  }
 
-*/
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

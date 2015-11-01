@@ -56,6 +56,10 @@
 		8F9F087F1BE652360016FE6F /* Reader-Print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F08641BE652360016FE6F /* Reader-Print@2x.png */; settings = {ASSET_TAGS = (); }; };
 		8F9F08801BE652360016FE6F /* Reader-Thumbs.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F08651BE652360016FE6F /* Reader-Thumbs.png */; settings = {ASSET_TAGS = (); }; };
 		8F9F08811BE652360016FE6F /* Reader-Thumbs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F08661BE652360016FE6F /* Reader-Thumbs@2x.png */; settings = {ASSET_TAGS = (); }; };
+		8F9F08891BE6536C0016FE6F /* ReaderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F9F08841BE6536C0016FE6F /* ReaderAppDelegate.m */; settings = {ASSET_TAGS = (); }; };
+		8F9F088A1BE6536C0016FE6F /* ReaderBookDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F9F08861BE6536C0016FE6F /* ReaderBookDelegate.m */; settings = {ASSET_TAGS = (); }; };
+		8F9F088B1BE6536C0016FE6F /* ReaderDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F9F08881BE6536C0016FE6F /* ReaderDemoController.m */; settings = {ASSET_TAGS = (); }; };
+		8F9F088E1BE65A0A0016FE6F /* ExPainimationCRF.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F088D1BE65A0A0016FE6F /* ExPainimationCRF.pdf */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -135,6 +139,13 @@
 		8F9F08641BE652360016FE6F /* Reader-Print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Print@2x.png"; sourceTree = "<group>"; };
 		8F9F08651BE652360016FE6F /* Reader-Thumbs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Thumbs.png"; sourceTree = "<group>"; };
 		8F9F08661BE652360016FE6F /* Reader-Thumbs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Reader-Thumbs@2x.png"; sourceTree = "<group>"; };
+		8F9F08831BE6536C0016FE6F /* ReaderAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderAppDelegate.h; sourceTree = "<group>"; };
+		8F9F08841BE6536C0016FE6F /* ReaderAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderAppDelegate.m; sourceTree = "<group>"; };
+		8F9F08851BE6536C0016FE6F /* ReaderBookDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderBookDelegate.h; sourceTree = "<group>"; };
+		8F9F08861BE6536C0016FE6F /* ReaderBookDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderBookDelegate.m; sourceTree = "<group>"; };
+		8F9F08871BE6536C0016FE6F /* ReaderDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDemoController.h; sourceTree = "<group>"; };
+		8F9F08881BE6536C0016FE6F /* ReaderDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDemoController.m; sourceTree = "<group>"; };
+		8F9F088D1BE65A0A0016FE6F /* ExPainimationCRF.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ExPainimationCRF.pdf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,11 +165,10 @@
 		8F9F07D71BE580E80016FE6F = {
 			isa = PBXGroup;
 			children = (
-				8F9F084B1BE652360016FE6F /* Graphics */,
-				8F9F07FD1BE5CD790016FE6F /* tree.jpg */,
-				8F9F08051BE651C00016FE6F /* Resources */,
-				8F9F080C1BE651C10016FE6F /* Sources */,
+				8F9F088D1BE65A0A0016FE6F /* ExPainimationCRF.pdf */,
+				8F9F088C1BE653800016FE6F /* VFReader */,
 				8F9F07E21BE580EB0016FE6F /* SignatureCapture */,
+				8F9F07FD1BE5CD790016FE6F /* tree.jpg */,
 				8F9F07E11BE580EB0016FE6F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -278,6 +288,30 @@
 			path = Graphics;
 			sourceTree = "<group>";
 		};
+		8F9F08821BE6536B0016FE6F /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				8F9F08831BE6536C0016FE6F /* ReaderAppDelegate.h */,
+				8F9F08841BE6536C0016FE6F /* ReaderAppDelegate.m */,
+				8F9F08851BE6536C0016FE6F /* ReaderBookDelegate.h */,
+				8F9F08861BE6536C0016FE6F /* ReaderBookDelegate.m */,
+				8F9F08871BE6536C0016FE6F /* ReaderDemoController.h */,
+				8F9F08881BE6536C0016FE6F /* ReaderDemoController.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		8F9F088C1BE653800016FE6F /* VFReader */ = {
+			isa = PBXGroup;
+			children = (
+				8F9F080C1BE651C10016FE6F /* Sources */,
+				8F9F08821BE6536B0016FE6F /* Classes */,
+				8F9F08051BE651C00016FE6F /* Resources */,
+				8F9F084B1BE652360016FE6F /* Graphics */,
+			);
+			name = VFReader;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -347,6 +381,7 @@
 				8F9F087D1BE652360016FE6F /* Reader-Mark-Y@2x.png in Resources */,
 				8F9F08751BE652360016FE6F /* Reader-Button-N@2x.png in Resources */,
 				8F9F087A1BE652360016FE6F /* Reader-Mark-N.png in Resources */,
+				8F9F088E1BE65A0A0016FE6F /* ExPainimationCRF.pdf in Resources */,
 				8F9F08761BE652360016FE6F /* Reader-Email.png in Resources */,
 				8F9F087F1BE652360016FE6F /* Reader-Print@2x.png in Resources */,
 				8F9F08721BE652360016FE6F /* Reader-Button-H.png in Resources */,
@@ -370,6 +405,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F9F088A1BE6536C0016FE6F /* ReaderBookDelegate.m in Sources */,
 				8F9F08411BE651C10016FE6F /* ReaderThumbFetch.m in Sources */,
 				8F9F08401BE651C10016FE6F /* ReaderThumbCache.m in Sources */,
 				8F9F083B1BE651C10016FE6F /* ReaderContentView.m in Sources */,
@@ -380,6 +416,7 @@
 				8F9F083D1BE651C10016FE6F /* ReaderDocumentOutline.m in Sources */,
 				8F9F08421BE651C10016FE6F /* ReaderThumbQueue.m in Sources */,
 				8F9F07EB1BE580EB0016FE6F /* ViewController.m in Sources */,
+				8F9F08891BE6536C0016FE6F /* ReaderAppDelegate.m in Sources */,
 				8F9F083A1BE651C10016FE6F /* ReaderContentTile.m in Sources */,
 				8F9F083F1BE651C10016FE6F /* ReaderMainToolbar.m in Sources */,
 				8F9F08471BE651C10016FE6F /* ReaderViewController.m in Sources */,
@@ -391,6 +428,7 @@
 				8F9F083C1BE651C10016FE6F /* ReaderDocument.m in Sources */,
 				8F9F08491BE651C10016FE6F /* ThumbsViewController.m in Sources */,
 				8F9F08481BE651C10016FE6F /* ThumbsMainToolbar.m in Sources */,
+				8F9F088B1BE6536C0016FE6F /* ReaderDemoController.m in Sources */,
 				8F9F07E51BE580EB0016FE6F /* main.m in Sources */,
 				8F9F07F11BE580EC0016FE6F /* SignatureCapture.xcdatamodeld in Sources */,
 				8F9F084A1BE651C10016FE6F /* UIXToolbarView.m in Sources */,
