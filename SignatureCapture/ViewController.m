@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#define kPadding 20
+#define kPadding 50
 @interface ViewController ()
 {
     CGSize _pageSize;
@@ -28,12 +28,12 @@
     self.imageFrame = CGRectMake(self.view.frame.origin.x+10,
                             self.view.frame.origin.y-5,
                             self.view.frame.size.width-20,
-                            self.view.frame.size.height-30);
+                            self.view.frame.size.height-200);
     
     //allocate an image view and add to the main view
     self.mySignatureImage = [[UIImageView alloc] initWithImage:nil];
     self.mySignatureImage.frame = self.imageFrame;
-    self.mySignatureImage.backgroundColor = [UIColor whiteColor];
+    self.mySignatureImage.backgroundColor = [UIColor blueColor];
     [self.view addSubview:self.mySignatureImage];
 }
 //when one or more fingers touch down in a view or window
@@ -45,7 +45,7 @@
     
     //just clear the image if the user tapped twice on the screen
     if ([touch tapCount] == 2) {
-        self.mySignatureImage.image = nil;
+        //self.mySignatureImage.image = nil;
         return;
     }
     
@@ -100,7 +100,7 @@
     
     //set the image based on the contents of the current bitmap-based graphics context
     _mySignatureImage.image = UIGraphicsGetImageFromCurrentImageContext();
-    
+    self.imageView.image = _mySignatureImage.image;
     //remove the current bitmap-based graphics context from the top of the stack
     UIGraphicsEndImageContext();
     
@@ -115,7 +115,7 @@
     //just clear the image if the user tapped twice on the screen
     if ([touch tapCount] == 2) {
         [self saveSignature:self];
-        _mySignatureImage.image = nil;
+        //_mySignatureImage.image = nil;
         
         return;
     }
@@ -183,7 +183,7 @@
     if ([buttonTitle isEqualToString:@"Ok"]){
         NSLog(@"Ok button was pressed.");
         NSLog(@"Name of the person is: %@", [[alertView textFieldAtIndex:0] text]);
-        NSString * personName = [[alertView textFieldAtIndex:0] text];
+        self.personName = [NSString stringWithFormat:@"%@    %@", [[alertView textFieldAtIndex:0] text], [NSDate date]];
         
         //create path to where we want the image to be saved
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -202,11 +202,16 @@
         //convert image into .png format.
         NSData *imageData = UIImagePNGRepresentation(_mySignatureImage.image);
         NSString *fileName = [filePath stringByAppendingPathComponent:
-                              [NSString stringWithFormat:@"%@.png", personName]];
+                              [NSString stringWithFormat:@"%@.jpg", _personName]];
         
         //creates an image file with the specified content and attributes at the given location
         [fileManager createFileAtPath:fileName contents:imageData attributes:nil];
         NSLog(@"image saved");
+        
+//        self.imageView.image = [UIImage imageNamed:@"tree.jpg"];
+//        UIImage *img = [UIImage imageWithContentsOfFile:(the file path)];
+        self.imageView.image = _mySignatureImage.image;
+        
         [self makePDF];
         
         //check if the display signature view controller doesn't exists then create it
@@ -237,16 +242,19 @@
     
     [self beginPDFPage];
     
-    CGRect textRect = [self addText:@"This is some nice text here, don't you agree?"
+    CGRect textRect = [self addText:_personName
                           withFrame:CGRectMake(kPadding, kPadding, 400, 200) fontSize:28.0f];
     
     CGRect blueLineRect = [self addLineWithFrame:CGRectMake(kPadding, textRect.origin.y + textRect.size.height + kPadding, _pageSize.width - kPadding*2, 4)
                                        withColor:[UIColor blueColor]];
     
-//    UIImage *anImage = [UIImage imageNamed:@"tree.jpg"];
+//    _mySignatureImage.image = [UIImage imageNamed:@"tree.jpg"];
     
     CGRect imageRect = [self addImage:_mySignatureImage.image
-                              atPoint:CGPointMake((_pageSize.width/2)-(_mySignatureImage.image.size.width/2), blueLineRect.origin.y + blueLineRect.size.height + kPadding)];
+                              atPoint:CGPointMake(10, blueLineRect.origin.y + blueLineRect.size.height + kPadding)];
+    
+//    CGRect imageRect = [self addImage:_mySignatureImage.image
+//                    atPoint:CGPointMake(10,10)];
     
     [self addLineWithFrame:CGRectMake(kPadding, imageRect.origin.y + imageRect.size.height + kPadding, _pageSize.width - kPadding*2, 4)
                  withColor:[UIColor redColor]];
@@ -263,7 +271,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:newPDFName];
-    
+    self.url = [NSURL fileURLWithPath:pdfPath];
     UIGraphicsBeginPDFContextToFile(pdfPath, CGRectZero, nil);
 }
 
@@ -274,7 +282,7 @@
 - (void)finishPDF {
     UIGraphicsEndPDFContext();
     NSLog(@"image saved to PDF");
-//    [self openPDF];
+    [self revealPDF];
 }
 
 - (CGRect)addText:(NSString*)text withFrame:(CGRect)frame fontSize:(float)fontSize {
@@ -328,7 +336,18 @@
     
     return imageFrame;
 }
-
+-(void)revealPDF {
+    NSLog(@"the url is %@", _url);
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, 10, 320, 400)];
+    
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"document" ofType:@"pdf"];
+//    NSURL *targetURL = [NSURL fileURLWithPath:path];
+    NSURLRequest *request = [NSURLRequest requestWithURL:_url];
+    [webView loadRequest:request];
+    
+    [self.view addSubview:webView];
+    
+}
 /*
 - (void)openPDF {
  

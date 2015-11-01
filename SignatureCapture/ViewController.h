@@ -10,10 +10,12 @@
 
 @interface ViewController : UIViewController
 @property (nonatomic, strong) UIImageView *mySignatureImage;
+@property (nonatomic, strong) NSString *personName;
 @property (nonatomic, assign) CGPoint lastContactPoint1, lastContactPoint2, currentPoint;
 @property (nonatomic, assign) CGRect imageFrame;
 @property (nonatomic, assign) BOOL fingerMoved;
 @property (nonatomic, assign) float navbarHeight;
-
+@property (nonatomic, strong) NSURL *url;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @end
 

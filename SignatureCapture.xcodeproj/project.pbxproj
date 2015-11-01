@@ -14,6 +14,10 @@
 		8F9F07F11BE580EC0016FE6F /* SignatureCapture.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F9F07EF1BE580EC0016FE6F /* SignatureCapture.xcdatamodeld */; };
 		8F9F07F31BE580EC0016FE6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F07F21BE580EC0016FE6F /* Assets.xcassets */; };
 		8F9F07F61BE580EC0016FE6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F07F41BE580EC0016FE6F /* LaunchScreen.storyboard */; };
+		8F9F07FE1BE5CD790016FE6F /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8F9F07FD1BE5CD790016FE6F /* tree.jpg */; settings = {ASSET_TAGS = (); }; };
+		8F9F08001BE64D470016FE6F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F9F07FF1BE64D470016FE6F /* QuartzCore.framework */; };
+		8F9F08021BE64D500016FE6F /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F9F08011BE64D500016FE6F /* ImageIO.framework */; };
+		8F9F08041BE64D620016FE6F /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F9F08031BE64D620016FE6F /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		8F9F07F21BE580EC0016FE6F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F9F07F51BE580EC0016FE6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F9F07F71BE580EC0016FE6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F9F07FD1BE5CD790016FE6F /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
+		8F9F07FF1BE64D470016FE6F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		8F9F08011BE64D500016FE6F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		8F9F08031BE64D620016FE6F /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +43,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F9F08041BE64D620016FE6F /* MessageUI.framework in Frameworks */,
+				8F9F08021BE64D500016FE6F /* ImageIO.framework in Frameworks */,
+				8F9F08001BE64D470016FE6F /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +55,10 @@
 		8F9F07D71BE580E80016FE6F = {
 			isa = PBXGroup;
 			children = (
+				8F9F08031BE64D620016FE6F /* MessageUI.framework */,
+				8F9F08011BE64D500016FE6F /* ImageIO.framework */,
+				8F9F07FF1BE64D470016FE6F /* QuartzCore.framework */,
+				8F9F07FD1BE5CD790016FE6F /* tree.jpg */,
 				8F9F07E21BE580EB0016FE6F /* SignatureCapture */,
 				8F9F07E11BE580EB0016FE6F /* Products */,
 			);
@@ -142,6 +157,7 @@
 				8F9F07F61BE580EC0016FE6F /* LaunchScreen.storyboard in Resources */,
 				8F9F07F31BE580EC0016FE6F /* Assets.xcassets in Resources */,
 				8F9F07EE1BE580EC0016FE6F /* Main.storyboard in Resources */,
+				8F9F07FE1BE5CD790016FE6F /* tree.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
