@@ -7,9 +7,11 @@
 //
 
 #import "ViewController.h"
-
+#define kPadding 20
 @interface ViewController ()
-
+{
+    CGSize _pageSize;
+}
 @end
 
 @implementation ViewController
@@ -112,7 +114,9 @@
     
     //just clear the image if the user tapped twice on the screen
     if ([touch tapCount] == 2) {
+        [self saveSignature:self];
         _mySignatureImage.image = nil;
+        
         return;
     }
     
@@ -147,12 +151,13 @@
 //save button was clicked, its time to save the signature
 - (void) saveSignature:(id)sender {
     
+    NSLog(@"save signature");
     //get reference to the button that requested the action
-    UIBarButtonItem *myButton = (UIBarButtonItem *)sender;
+//    UIBarButtonItem *myButton = (UIBarButtonItem *)sender;
     
     //check which button it is, if you have more than one button on the screen
     //you must check before taking necessary action
-    if([myButton.title isEqualToString:@"Save"]){
+    
         NSLog(@"Clicked on the bar button");
         
         //display an alert to capture the person's name
@@ -163,13 +168,13 @@
                                                   otherButtonTitles:@"Ok", nil];
         [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alertView show];
-    }
+    
     
 }
 
 //some action was taken on the alert view
 - (void) alertView:(UIAlertView *)alertView
-clickedButtonAtIndex:(NSInteger)buttonIndex{
+    clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     //which button was pressed in the alert view
     NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
@@ -202,6 +207,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         //creates an image file with the specified content and attributes at the given location
         [fileManager createFileAtPath:fileName contents:imageData attributes:nil];
         NSLog(@"image saved");
+        [self makePDF];
         
         //check if the display signature view controller doesn't exists then create it
 //        if(self.displaySignatureViewController == nil){
@@ -224,8 +230,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     }
     
 }
-/*
+
 -(void)makePDF {
+    NSLog(@"Try to make the PDF");
     [self setupPDFDocumentNamed:@"NewPDF" Width:850 Height:1100];
     
     [self beginPDFPage];
@@ -236,9 +243,10 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     CGRect blueLineRect = [self addLineWithFrame:CGRectMake(kPadding, textRect.origin.y + textRect.size.height + kPadding, _pageSize.width - kPadding*2, 4)
                                        withColor:[UIColor blueColor]];
     
-    UIImage *anImage = [UIImage imageNamed:@"tree.jpg"];
-    CGRect imageRect = [self addImage:anImage
-                              atPoint:CGPointMake((_pageSize.width/2)-(anImage.size.width/2), blueLineRect.origin.y + blueLineRect.size.height + kPadding)];
+//    UIImage *anImage = [UIImage imageNamed:@"tree.jpg"];
+    
+    CGRect imageRect = [self addImage:_mySignatureImage.image
+                              atPoint:CGPointMake((_pageSize.width/2)-(_mySignatureImage.image.size.width/2), blueLineRect.origin.y + blueLineRect.size.height + kPadding)];
     
     [self addLineWithFrame:CGRectMake(kPadding, imageRect.origin.y + imageRect.size.height + kPadding, _pageSize.width - kPadding*2, 4)
                  withColor:[UIColor redColor]];
@@ -265,6 +273,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 
 - (void)finishPDF {
     UIGraphicsEndPDFContext();
+    NSLog(@"image saved to PDF");
+//    [self openPDF];
 }
 
 - (CGRect)addText:(NSString*)text withFrame:(CGRect)frame fontSize:(float)fontSize {
@@ -318,8 +328,32 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     return imageFrame;
 }
-*/
 
+/*
+- (void)openPDF {
+ 
+ NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+ NSString *documentsDirectory = [paths objectAtIndex:0];
+ NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:@"NewPDF.pdf"];
+ 
+ if([[NSFileManager defaultManager] fileExistsAtPath:pdfPath]) {
+ 
+ ReaderDocument *document = [ReaderDocument withDocumentFilePath:pdfPath password:nil];
+ 
+ if (document != nil)
+ {
+ ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+ readerViewController.delegate = self;
+ 
+ readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+ readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+ 
+ [self presentModalViewController:readerViewController animated:YES];
+ }
+ }
+ }
+
+*/
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
