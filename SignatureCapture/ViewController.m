@@ -7,7 +7,16 @@
 //
 
 #import "ViewController.h"
+#import "AFNetworking.h"
+#import "AFHTTPRequestOperationManager.h"
+
+
 #define kPadding 50
+//REDCap
+#define kURLstring @"https://www.ctsiredcap.pitt.edu/redcap/api/"
+#define kTOKEN @"D198611144091AAFD503CB7C37D4210D"
+
+
 @interface ViewController () <ReaderViewControllerDelegate>
 {
     CGSize _pageSize;
@@ -405,6 +414,9 @@
     // Finalize the output file
     CGPDFContextClose(writeContext);
     [self openPDF];
+    NSURL *url = [NSURL fileURLWithPath:_icfPathOutput];
+    NSLog(@"URL FOR FILE IS %@ at path %@", url, _icfPathOutput);
+    [self importFileURL:url];
     
     // Release from memory
     CFRelease(pdfURL1);
@@ -414,29 +426,63 @@
     CGPDFDocumentRelease(pdfRef2);
     CGContextRelease(writeContext);
 }
+-(void)importFileURL:(NSURL *)url {
+//    NSString* str = @"some pretty text";
+//    NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSString *documentsDirectory = nil;
+//    NSArray *directoryPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    documentsDirectory = [directoryPaths objectAtIndex:0];
+//    
+//    NSString *localFileName = @"flatSimple.txt";
+//    NSString *localDestination = [NSString stringWithFormat:@"%@/%@",documentsDirectory, localFileName];
+//    
+//    NSError (*__autoreleasing error) =[[NSError alloc] init];
+//    [data writeToFile:localDestination options:NSDataWritingFileProtectionComplete error:&error];
+//    
+    
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = NO;
+    NSDictionary *parameters = @{@"token":kTOKEN,
+                                 @"content": @"file",
+                                 @"action":@"import",
+                                 @"record":@"1",
+                                 @"field":@"data_file"};
+    [manager POST:kURLstring parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:url name:@"file" error:nil];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"REDCap Success: %@", url);//server may not send a respnse so the responseObject might be null.
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Failed Error: %@", error);
+    }];
+    
+}
 
 - (void)openPDF {
- 
-// NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-// NSString *documentsDirectory = [paths objectAtIndex:0];
-// NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:@"NewPDF.pdf"];
- 
- if([[NSFileManager defaultManager] fileExistsAtPath:_icfPathOutput]) {
- 
- ReaderDocument *document = [ReaderDocument withDocumentFilePath:_icfPathOutput password:nil];
- 
- if (document != nil)
- {
- ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
- readerViewController.delegate = self;
- 
- readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
- readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
- 
- [self presentModalViewController:readerViewController animated:YES];
- }
- }
- }
+    
+    // NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    // NSString *documentsDirectory = [paths objectAtIndex:0];
+    // NSString *pdfPath = [documentsDirectory stringByAppendingPathComponent:@"NewPDF.pdf"];
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:_icfPathOutput]) {
+        
+        ReaderDocument *document = [ReaderDocument withDocumentFilePath:_icfPathOutput password:nil];
+        
+        if (document != nil)
+        {
+            ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+            readerViewController.delegate = self;
+            
+            readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+            
+            [self presentViewController:readerViewController animated:YES completion:^{
+                NSLog(@"SUCCESS ALL AROUND");
+            }];
+        }
+    }
+}
 
 
 - (void)didReceiveMemoryWarning
