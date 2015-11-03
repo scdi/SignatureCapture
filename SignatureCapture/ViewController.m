@@ -410,13 +410,13 @@
         CGContextEndPage(writeContext);
     }
     NSLog(@"DONE!");
-    
-    // Finalize the output file
-    CGPDFContextClose(writeContext);
-    [self openPDF];
     NSURL *url = [NSURL fileURLWithPath:_icfPathOutput];
     NSLog(@"URL FOR FILE IS %@ at path %@", url, _icfPathOutput);
     [self importFileURL:url];
+    // Finalize the output file
+    CGPDFContextClose(writeContext);
+    [self openPDF];
+   
     
     // Release from memory
     CFRelease(pdfURL1);
@@ -454,8 +454,27 @@
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"REDCap Success: %@", url);//server may not send a respnse so the responseObject might be null.
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed Error: %@", error);
+        NSLog(@"REDCap Failed: %@", error);
+        //This code fixes error code -1005 but not -1012
+        if (error.code == -1005)
+        {
+            NSLog(@"REDCap retry");
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                
+                dispatch_group_t downloadGroup = dispatch_group_create();
+                dispatch_group_enter(downloadGroup);
+                dispatch_group_wait(downloadGroup, dispatch_time(DISPATCH_TIME_NOW, 5000000000)); // Wait 5 seconds before trying again.
+                dispatch_group_leave(downloadGroup);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //Main Queue stuff here
+                    [self importFileURL:url]; //Redo the function that made the Request.
+                });
+            });
+            
+            return;
+        }
     }];
+
     
 }
 
