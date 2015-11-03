@@ -29,7 +29,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     //set the view background to light gray
-    self.view.backgroundColor = [UIColor lightGrayColor];
+    //self.view.backgroundColor = [UIColor lightGrayColor];
     
 
     
@@ -192,7 +192,13 @@
     if ([buttonTitle isEqualToString:@"Ok"]){
         NSLog(@"Ok button was pressed.");
         NSLog(@"Name of the person is: %@", [[alertView textFieldAtIndex:0] text]);
-        self.personName = [NSString stringWithFormat:@"%@    %@", [[alertView textFieldAtIndex:0] text], [NSDate date]];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        NSDate *now = [NSDate date];
+        NSString *formattedDate = [dateFormatter stringFromDate:now];
+        self.personName = [NSString stringWithFormat:@"%@    %@", [[alertView textFieldAtIndex:0] text], formattedDate];
         
         //create path to where we want the image to be saved
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -444,6 +450,7 @@
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = NO;
+    
     NSDictionary *parameters = @{@"token":kTOKEN,
                                  @"content": @"file",
                                  @"action":@"import",
@@ -460,7 +467,6 @@
         {
             NSLog(@"REDCap retry");
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                
                 dispatch_group_t downloadGroup = dispatch_group_create();
                 dispatch_group_enter(downloadGroup);
                 dispatch_group_wait(downloadGroup, dispatch_time(DISPATCH_TIME_NOW, 5000000000)); // Wait 5 seconds before trying again.
