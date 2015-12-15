@@ -253,7 +253,7 @@
 
 -(void)makePDF {
     NSLog(@"Try to make the PDF");
-    [self setupPDFDocumentNamed:@"signature" Width:850 Height:1100];
+    [self setupPDFDocumentNamed:@"signature" Width:612 Height:900];
     
     [self beginPDFPage];
     
@@ -447,7 +447,6 @@
 //    [data writeToFile:localDestination options:NSDataWritingFileProtectionComplete error:&error];
 //    
     
-    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = NO;
     
@@ -499,7 +498,7 @@
             ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
             readerViewController.delegate = self;
             
-            readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            readerViewController.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
             readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
             
             [self presentViewController:readerViewController animated:YES completion:^{
